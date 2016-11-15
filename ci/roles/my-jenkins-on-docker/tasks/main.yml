@@ -1,0 +1,20 @@
+---
+#- apt: name={{ item }}
+#with_items:
+#  - python-dev
+#  - virtualenv
+#  - python-pip
+- pip: name={{ item }}
+  with_items:
+    - docker-py
+- file: path='/opt/jenkins-home' state='directory' mode=0777
+- docker_image: name='my-jenkins-on-docker' state=present path='/tmp/jenkins-image' force=yes nocache=yes
+- docker:
+    name: jenkins
+    image: my-jenkins-on-docker
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+#      volumes:
+#        - /opt/jenkins-home:/var/jenkins_home
+    state: restarted

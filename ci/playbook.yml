@@ -1,0 +1,10 @@
+---
+- hosts: all
+  remote_user: root
+  gather_facts: True
+  sudo: true
+  vars:
+    docker_opts: -H unix:// -H tcp://0.0.0.0:2375 --log-level=debug
+  roles:
+  - angstwad.docker_ubuntu
+  - my-jenkins-on-docker
