@@ -30,5 +30,4 @@ COPY configs/hudson.plugins.gradle.Gradle.xml /var/jenkins_home/hudson.plugins.g
 # add maven3 tool                   [ok]
 # create enviroment from jenkins    [?]
 
-
 # cloud development + deployment.

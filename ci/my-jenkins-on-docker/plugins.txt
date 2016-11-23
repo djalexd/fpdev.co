@@ -52,3 +52,8 @@ pipeline-rest-api:latest
 pipeline-graph-analysis:latest
 git-server:latest
 jacoco:latest
+docker-workflow:latest
+docker-commons:latest
+docker-build-step:latest
+authentication-tokens:latest
+icon-shim:latest
