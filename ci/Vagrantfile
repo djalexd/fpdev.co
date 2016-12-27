@@ -2,11 +2,13 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "bento/debian-8.5"
+  # Define number of workers
+  workers = env("SWARM_WORKERS") || 1
+
+  config.vm.box = "ubuntu/trusty64"
 
   config.vm.define "jenkins" do |jenkins|
-    jenkins.vm.network "forwarded_port", guest: 8080, host: 9090
-    jenkins.vm.network "private_network", ip: "192.168.33.10"
+    jenkins.vm.network "private_network", ip: "192.168.50.1"
     jenkins.vm.provider "virtualbox" do |v|
       v.memory = 1024
     end
@@ -18,20 +20,66 @@ Vagrant.configure(2) do |config|
 
     # Do regular ansible provisioning
     jenkins.vm.provision "ansible" do |ansible|
-      ansible.playbook = "playbook.yml"
-      ansible.galaxy_role_file = "galaxy.roles"
+      ansible.playbook = "plays/jenkins.yml"
+      #ansible.galaxy_role_file = "galaxy.roles"
     end
   end
 
-  config.vm.define "dev" do |dev|
+  # Local environment
+  config.vm.define "dev-swarm-manager" do |dev|
     dev.vm.network "private_network", ip: "192.168.50.10"
+    dev.vm.hostname = "dev-swarm-mananger"
     dev.vm.provider "virtualbox" do |v|
-      v.memory = 768
+      v.memory = 512
     end
 
     dev.vm.provision "ansible" do |ansible|
-      ansible.playbook = "env.yml"
-      ansible.galaxy_role_file = "galaxy.roles"
+      ansible.playbook = "plays/env.yml"
+      #ansible.galaxy_role_file = "galaxy.roles"
+      #ansible.groups = {
+      #  "docker_swarm_manager" => [ "dev-swarm-manager" ],
+      #  "docker_swarm_worker" => swarmWorkersList(workers),
+      #  "docker_engine" => swarmCompleteList(workers)
+      #}
+      #ansible.extra_vars = {
+      #  docker_swarm_interface: "eth1"
+      #}
+      #ansible.inventory_path = "./vagrant-inventory"
     end
   end
+
+  (1..workers).each do |id|
+    config.vm.define "dev-swarm-worker-#{ id }" do |dev|
+      dev.vm.network "private_network", ip: "192.168.50.#{ 10 + id }"
+      dev.vm.hostname = "dev-swarm-worker-#{ id }"
+      dev.vm.provider "virtualbox" do |v|
+        v.memory = 768
+      end
+
+      dev.vm.provision "ansible" do |ansible|
+        ansible.playbook = "plays/env.yml"
+        #ansible.inventory_path = "./vagrant-inventory"
+        #ansible.galaxy_role_file = "galaxy.roles"
+        #ansible.groups = {
+        #  "docker_swarm_manager" => [ "dev-swarm-manager" ],
+        #  "docker_swarm_worker" => swarmWorkersList(workers),
+        #  "docker_engine" => swarmCompleteList(workers)
+        #}
+      end
+    end
+  end
+end
+
+def env(key)
+  val = ENV[key].to_i
+  return nil if val.zero?
+  val
+end
+
+def swarmWorkersList(workers)
+  return (1..workers).to_a.map { |n| "dev-swarm-worker-#{n}" }
+end
+
+def swarmCompleteList(workers)
+  return swarmWorkersList(workers).push("dev-swarm-manager")
 end

@@ -1,0 +1,32 @@
+{
+	"variables": {
+		"DO_API_TOKEN": "{{env `DO_API_TOKEN`}}"
+	},
+	"builders": [
+		{
+			"type": "digitalocean",
+			"api_token": "{{user `DO_API_TOKEN`}}",
+			"image": "ubuntu-14-04-x64",
+			"region": "ams3",
+			"size": "512mb",
+			"communicator": "ssh",
+			"ssh_username": "root"
+		}
+	],
+	"provisioners": [
+		{
+			"type": "shell",
+			"inline": [
+				"sudo apt-get install -y git",
+				"echo 'Hello, world!'"
+			]
+		}
+	],
+	"post-processors": [
+		{
+			"type": "manifest",
+			"output": "manifest.json",
+			"strip_path": true
+		}
+	]
+}

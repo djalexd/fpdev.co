@@ -1,0 +1,15 @@
+---
+- hosts: docker_swarm_manager
+  remote_user: root
+  gather_facts: No
+  sudo: true
+  tasks:
+    - name: docker service rm {{ name }}
+      shell: docker service rm {{ name }}
+      ignore_errors: true
+    - name: docker service create {{ name }} of type {{ image_name }}
+      shell: >
+        docker service create 
+        -p 80
+        --name {{ name }}
+        {{ image_name }}:{{ version | default('latest') }}

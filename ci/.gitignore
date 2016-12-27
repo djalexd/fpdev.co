@@ -1,2 +1,9 @@
 .vagrant/
 *.retry
+
+# For now, disable secrets directory (however, I need to find
+# a better solution).
+secrets/
+
+terraform.tfstate
+terraform.tfstate.backup
