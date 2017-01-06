@@ -3,7 +3,8 @@
 
 # For now, disable secrets directory (however, I need to find
 # a better solution).
-secrets/
+terraform/modules/ssh/secrets/
 
 terraform.tfstate
 terraform.tfstate.backup
+.terraform

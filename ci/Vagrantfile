@@ -34,7 +34,7 @@ Vagrant.configure(2) do |config|
     end
 
     dev.vm.provision "ansible" do |ansible|
-      ansible.playbook = "plays/env.yml"
+      ansible.playbook = "plays/site.yml"
       #ansible.galaxy_role_file = "galaxy.roles"
       #ansible.groups = {
       #  "docker_swarm_manager" => [ "dev-swarm-manager" ],
@@ -57,7 +57,7 @@ Vagrant.configure(2) do |config|
       end
 
       dev.vm.provision "ansible" do |ansible|
-        ansible.playbook = "plays/env.yml"
+        ansible.playbook = "plays/site.yml"
         #ansible.inventory_path = "./vagrant-inventory"
         #ansible.galaxy_role_file = "galaxy.roles"
         #ansible.groups = {

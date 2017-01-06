@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  gather_facts: true
+  connection: local
+  vars:
+  roles:
+  - geerlingguy.nginx
+  - mtchavez.consul-template

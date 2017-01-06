@@ -2,7 +2,7 @@
 - hosts: all
   remote_user: root
   gather_facts: No
-  sudo: True
+  sudo: true
   tasks:
   - name: install missing python2 package
     raw: sudo apt-get -y install python
@@ -17,8 +17,7 @@
     docker_swarm_interface: "eth0"
     docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"
   roles:
-  - djalexd.docker-swarm
-  - docker-tls
+  - atosatto.docker-swarm
   pre_tasks:
   - apt: update_cache=yes
     when: ansible_os_family == 'Debian'

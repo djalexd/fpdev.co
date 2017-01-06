@@ -1,0 +1,2 @@
+mtchavez.consul-template
+geerlingguy.nginx
