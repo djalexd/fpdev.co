@@ -17,7 +17,7 @@ resource "digitalocean_tag" "docker_swarm_worker" {
 
 resource "digitalocean_droplet" "docker_swarm_manager" {
   image    = "${var.image}"
-  name     = "docker_swarm_manager-${format("%02d", count.index + 1)}"
+  name     = "docker-swarm-manager-${format("%02d", count.index + 1)}"
   region   = "${var.region}"
   count    = "${lookup(var.counts, "docker_swarm_manager")}"
   size     = "${lookup(var.sizes, "docker_swarm_manager")}"
@@ -27,7 +27,7 @@ resource "digitalocean_droplet" "docker_swarm_manager" {
 
 resource "digitalocean_droplet" "docker_swarm_worker" {
   image    = "${var.image}"
-  name     = "docker_swarm_worker-${format("%02d", count.index + 1)}"
+  name     = "docker-swarm-worker-${format("%02d", count.index + 1)}"
   region   = "${var.region}"
   count    = "${lookup(var.counts, "docker_swarm_worker")}"
   size     = "${lookup(var.sizes, "docker_swarm_worker")}"

@@ -1,0 +1,20 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "hello world api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/waleedsamy/hello-world-expressjs-docker.git"
+  },
+  "author": "waleed samy <waleedsamy634@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "exwml": "^2.0.0",
+    "consul": "0.27.0"
+  }
+}

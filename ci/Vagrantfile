@@ -4,6 +4,7 @@
 Vagrant.configure(2) do |config|
   # Define number of workers
   workers = env("SWARM_WORKERS") || 1
+  consul_servers = env("CONSUL_SERVERS") || 1
 
   config.vm.box = "ubuntu/trusty64"
 
@@ -25,46 +26,58 @@ Vagrant.configure(2) do |config|
     end
   end
 
+  (1..consul_servers).each do |id|
+    config.vm.define "consul-server-#{ id }" do |consul|
+        consul.vm.network "private_network", ip: "192.168.40.#{ 1 + id }"
+        consul.vm.hostname = "consul-server-#{ id }"
+        consul.vm.provider "virtualbox" do |v|
+          v.memory = 256
+        end
+
+        consul.vm.provision "ansible" do |ansible|
+          ansible.playbook = "plays/consul-server-local.yml"
+          ansible.galaxy_role_file = "galaxy.roles"
+        end
+    end
+  end
+
   # Local environment
-  config.vm.define "dev-swarm-manager" do |dev|
+  config.vm.define "swarm-manager" do |dev|
     dev.vm.network "private_network", ip: "192.168.50.10"
-    dev.vm.hostname = "dev-swarm-mananger"
+    dev.vm.hostname = "swarm-mananger"
     dev.vm.provider "virtualbox" do |v|
-      v.memory = 512
+      v.memory = 256
     end
 
     dev.vm.provision "ansible" do |ansible|
-      ansible.playbook = "plays/site.yml"
-      #ansible.galaxy_role_file = "galaxy.roles"
-      #ansible.groups = {
-      #  "docker_swarm_manager" => [ "dev-swarm-manager" ],
-      #  "docker_swarm_worker" => swarmWorkersList(workers),
-      #  "docker_engine" => swarmCompleteList(workers)
-      #}
-      #ansible.extra_vars = {
-      #  docker_swarm_interface: "eth1"
-      #}
-      #ansible.inventory_path = "./vagrant-inventory"
+      ansible.playbook = "plays/swarm-manager.yml"
+      ansible.galaxy_role_file = "galaxy.roles"
+      ansible.groups = {
+        "docker_swarm_manager" => [ "swarm-manager" ]
+      }
     end
   end
 
   (1..workers).each do |id|
-    config.vm.define "dev-swarm-worker-#{ id }" do |dev|
+    config.vm.define "swarm-worker-#{ id }" do |dev|
       dev.vm.network "private_network", ip: "192.168.50.#{ 10 + id }"
-      dev.vm.hostname = "dev-swarm-worker-#{ id }"
+      dev.vm.hostname = "swarm-worker-#{ id }"
       dev.vm.provider "virtualbox" do |v|
-        v.memory = 768
+        v.memory = 512
       end
 
-      dev.vm.provision "ansible" do |ansible|
-        ansible.playbook = "plays/site.yml"
-        #ansible.inventory_path = "./vagrant-inventory"
-        #ansible.galaxy_role_file = "galaxy.roles"
-        #ansible.groups = {
-        #  "docker_swarm_manager" => [ "dev-swarm-manager" ],
-        #  "docker_swarm_worker" => swarmWorkersList(workers),
-        #  "docker_engine" => swarmCompleteList(workers)
-        #}
+      # Only execute once the Ansible provisioner,
+      # when all the machines are up and ready.
+      if id == workers
+        dev.vm.provision "ansible" do |ansible|
+          ansible.limit = "docker_swarm_manager:docker_swarm_worker"
+          ansible.playbook = "plays/swarm-worker.yml"
+          ansible.galaxy_role_file = "galaxy.roles"
+          ansible.groups = {
+              "docker_swarm_manager" => [ "swarm-manager" ],
+              "docker_swarm_worker" => [ "swarm-worker-1" ]
+          }
+        end
       end
     end
   end

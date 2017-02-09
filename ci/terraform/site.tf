@@ -45,3 +45,11 @@ module "dns_subdomain_dev" "dev" {
   subdomain = "dev"
   ip         = "${module.lb.ip}"
 }
+
+module "vms" "default" {
+  source   = "./modules/vms"
+  token    = "${var.token}"
+  image    = "${var.image}"
+  region   = "${var.region}"
+  ssh_keys = ["${module.ssh.ssh_key_id}"]
+}

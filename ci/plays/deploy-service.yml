@@ -10,6 +10,10 @@
     - name: docker service create {{ name }} of type {{ image_name }}
       shell: >
         docker service create 
-        -p 80
+        -p{{ ports | default('80') }}
+        --replicas {{ replicas | default('1') }}
         --name {{ name }}
+        --env SERVICE_8080_CHECK_HTTP='/health'
+        --env SERVICE_8080_CHECK_INTERVAL=15s
+        --env SERVICE_8080_CHECK_TIMEOUT=1s        
         {{ image_name }}:{{ version | default('latest') }}

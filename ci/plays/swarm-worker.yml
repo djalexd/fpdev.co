@@ -1,0 +1,24 @@
+---
+- hosts: all
+  remote_user: root
+  sudo: true  
+  gather_facts: true
+  vars:
+    consul_use_upstart: true
+    consul_use_systemd: false
+    consul_bootstrap: false
+    consul_is_ui: false
+    consul_is_server: false
+    consul_bind_address: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
+    consul_client_address: "{{ consul_bind_address }}"
+    consul_node_name: "{{ ansible_hostname }}"
+    consul_servers: [ "192.168.40.2" ] # TODO How to make this generic?
+    consul_join_at_start: true
+    consul_datacenter: "local"
+    docker_admin_users:
+    - docker
+    docker_swarm_interface: "eth1"
+    docker_swarm_addr: "{{ hostvars[inventory_hostname]['ansible_' + docker_swarm_interface]['ipv4']['address'] }}"  
+  roles:
+  - atosatto.docker-swarm
+  - savagegus.consul
