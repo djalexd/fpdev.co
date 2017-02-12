@@ -1,0 +1,5 @@
+consul_bootstrap: false
+consul_is_ui: true
+consul_is_server: false
+consul_servers: "{{ consul_servers_join_address }}"
+consul_join_at_start: true

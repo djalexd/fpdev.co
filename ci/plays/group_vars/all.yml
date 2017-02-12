@@ -1,0 +1,9 @@
+# Default values
+consul_use_upstart: true
+consul_use_systemd: false
+consul_bootstrap: true
+consul_datacenter: "local"
+consul_is_ui: true
+consul_is_server: true
+consul_bind_address: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
+consul_node_name: "{{ ansible_hostname }}"

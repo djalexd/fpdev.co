@@ -1,5 +1,5 @@
 ---
-- hosts: docker_swarm_manager
+- hosts: nomad-servers
   remote_user: root
   gather_facts: No
   sudo: true
@@ -9,11 +9,11 @@
       ignore_errors: true
     - name: docker service create {{ name }} of type {{ image_name }}
       shell: >
-        docker service create 
+        docker service create
         -p{{ ports | default('80') }}
         --replicas {{ replicas | default('1') }}
         --name {{ name }}
         --env SERVICE_8080_CHECK_HTTP='/health'
         --env SERVICE_8080_CHECK_INTERVAL=15s
-        --env SERVICE_8080_CHECK_TIMEOUT=1s        
+        --env SERVICE_8080_CHECK_TIMEOUT=1s
         {{ image_name }}:{{ version | default('latest') }}
