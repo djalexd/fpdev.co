@@ -1,0 +1,6 @@
+nomad_server: true
+nomad_client: false
+nomad_name: "{{ inventory_hostname }}"
+nomad_server_bootstrap_expect: 1
+nomad_bind_addr: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
+nomad_ports_http: 4646

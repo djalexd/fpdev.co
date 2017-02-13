@@ -1,0 +1,7 @@
+# from galaxy
+- src: angstwad.docker_ubuntu
+
+- src: savagegus.consul
+
+- src: https://github.com/djalexd/ansible-nomad.git
+  name: kbrebanov.nomad

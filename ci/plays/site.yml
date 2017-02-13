@@ -33,15 +33,15 @@
   gather_facts: true
   roles:
   - angstwad.docker_ubuntu
-  post_tasks:
-  - name: start registrator
-    docker_container:
-      name: registrator
-      image: gliderlabs/registrator
-      volumes:
-        - "/var/run/docker.sock:/tmp/docker.sock"
-      command: consul://"{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
-      hostname: "{{ inventory_hostname }}"
+  # post_tasks:
+  # - name: start registrator
+  #   docker_container:
+  #     name: registrator
+  #     image: gliderlabs/registrator
+  #     volumes:
+  #       - "/var/run/docker.sock:/tmp/docker.sock"
+  #     command: consul://"{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
+  #     hostname: "{{ inventory_hostname }}"
 
 - hosts: nomad-servers
   remote_user: root
@@ -61,6 +61,9 @@
   - role: kbrebanov.nomad
     nomad_server: false
     nomad_client: true
+    nomad_client_network_interface: "eth1"
     nomad_name: "{{ inventory_hostname }}"
     nomad_client_servers: "{{ nomad_servers_join_address }}"
     nomad_bind_addr: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
+    nomad_consul_enable: true
+    nomad_consul_address: "{{ consul_bind_address }}"

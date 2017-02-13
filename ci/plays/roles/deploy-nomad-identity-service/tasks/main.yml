@@ -1,0 +1,10 @@
+---
+- name: copy job template
+  template:
+    src: identity.nomad
+    dest: /tmp/identity.nomad
+  tags: always
+
+- name: run job on one of the nomad servers
+  command: nomad run -address="http://{{ nomad_bind_addr }}:{{ nomad_ports_http }}" /tmp/identity.nomad
+  run_once: true
