@@ -1,0 +1,8 @@
+nomad_server: false
+nomad_client: true
+nomad_client_network_interface: "eth1"
+nomad_name: "{{ inventory_hostname }}"
+nomad_client_servers: "{{ nomad_servers_join_address }}"
+nomad_bind_addr: "{{ default_ipv4 }}"
+nomad_consul_enable: true
+nomad_consul_address: "{{ consul_bind_address }}"

@@ -1,4 +1,11 @@
 ---
+# We need to determine how many instances are currently running.
+- name: Determine how many blue instances are currently running
+  shell: "nomad inspect -address=http://{{ nomad_bind_addr }}:{{ nomad_ports_http }} {{ job }} | jq '.Job.TaskGroups[] | select(.Name == \"blue\") | .Count'"
+  register: num_instances
+
+- name: Register count_active to {{ num_instances.stdout }}
+  set_fact: count_active="{{ num_instances.stdout }}"
 
 - include: blue-green.yml
   vars:

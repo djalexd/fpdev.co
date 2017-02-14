@@ -1,20 +1,7 @@
 ---
 - hosts: all
-  tasks:
-  - name: gather facts from consul servers
-    setup:
-    delegate_to: "{{ item }}"
-    delegate_facts: true
-    with_items: "{{ groups['consul-servers'] }}"
-  - name: aggregate consul servers to a list
-    set_fact: consul_servers_join_address="{{ groups['consul-servers']|map('extract', hostvars, ['ansible_eth1', 'ipv4', 'address'])|list }}"
-  - name: gather facts from nomad servers
-    setup:
-    delegate_to: "{{ item }}"
-    delegate_facts: true
-    with_items: "{{ groups['nomad-servers'] }}"
-  - name: aggregate nomad servers to a list
-    set_fact: nomad_servers_join_address="{{ groups['nomad-servers']|map('extract', hostvars, ['ansible_eth1', 'ipv4', 'address'])|list }}"
+  roles:
+  - setup-facts
 
 - hosts: consul-servers, consul-clients
   remote_user: root
@@ -33,46 +20,22 @@
   gather_facts: true
   roles:
   - angstwad.docker_ubuntu
-  # post_tasks:
-  # - name: start registrator
-  #   docker_container:
-  #     name: registrator
-  #     image: gliderlabs/registrator
-  #     volumes:
-  #       - "/var/run/docker.sock:/tmp/docker.sock"
-  #     command: consul://"{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
-  #     hostname: "{{ inventory_hostname }}"
 
 - hosts: nomad-servers
   remote_user: root
   sudo: true
   roles:
   - role: kbrebanov.nomad
-    nomad_server: true
-    nomad_client: false
-    nomad_name: "{{ inventory_hostname }}"
-    nomad_server_bootstrap_expect: 1
-    nomad_bind_addr: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
 
 - hosts: nomad-clients
   remote_user: root
   sudo: true
   roles:
   - role: kbrebanov.nomad
-    nomad_server: false
-    nomad_client: true
-    nomad_client_network_interface: "eth1"
-    nomad_name: "{{ inventory_hostname }}"
-    nomad_client_servers: "{{ nomad_servers_join_address }}"
-    nomad_bind_addr: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
-    nomad_consul_enable: true
-    nomad_consul_address: "{{ consul_bind_address }}"
 
 - hosts: lbs
   remote_user: root
   sudo: true
-  vars:
-    server_name: "{{ inventory_hostname }}"
   roles:
   - geerlingguy.nginx
   - configure-lb

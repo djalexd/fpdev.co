@@ -1,0 +1,3 @@
+consul_is_ui: false
+server_name: "{{ inventory_hostname }}"
+server_port: 80

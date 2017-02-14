@@ -1,0 +1,18 @@
+---
+# TODO Configure when (this only works for Vagrant)
+- name: configure default_ipv4
+  set_fact: default_ipv4="{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
+- name: gather facts from consul servers
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  with_items: "{{ groups['consul-servers'] }}"
+- name: aggregate consul servers to a list
+  set_fact: consul_servers_join_address="{{ groups['consul-servers']|map('extract', hostvars, ['default_ipv4'])|list }}"
+- name: gather facts from nomad servers
+  setup:
+  delegate_to: "{{ item }}"
+  delegate_facts: true
+  with_items: "{{ groups['nomad-servers'] }}"
+- name: aggregate nomad servers to a list
+  set_fact: nomad_servers_join_address="{{ groups['nomad-servers']|map('extract', hostvars, ['default_ipv4'])|list }}"

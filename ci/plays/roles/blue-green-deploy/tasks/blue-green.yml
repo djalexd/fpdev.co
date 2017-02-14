@@ -1,11 +1,11 @@
 ---
 - name: copy job template
   template:
-    src: identity.nomad
-    dest: /tmp/identity.nomad
+    src: job.nomad
+    dest: /tmp/
 
 - name: "Performing '{{ step | default('job') }}' on Nomad {{ nomad_bind_addr }}"
-  command: nomad run -address="http://{{ nomad_bind_addr }}:{{ nomad_ports_http }}" /tmp/identity.nomad
+  command: nomad run -address="http://{{ nomad_bind_addr }}:{{ nomad_ports_http }}" /tmp/job.nomad
   run_once: true
 
 - name: wait 20s
