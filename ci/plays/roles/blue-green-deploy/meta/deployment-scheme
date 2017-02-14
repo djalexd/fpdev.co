@@ -1,0 +1,33 @@
+(start point)
+ blue | image | version1 | count1 | tags1
+green | image |        - |      0 |     -
+ |
+ ˇ
+(bring up new version alongside)
+ blue | image | version1 | count1 | tags1
+green | image | version2 | count1 | tags1
+ |
+ ˇ
+(disable old version by using tags)
+ blue | image | version1 | count1 | tags2
+green | image | version2 | count1 | tags1
+ |
+ ˇ
+(remove old version by reducing count to 0)
+ blue | image | version1 |      0 | tags2
+green | image | version2 | count1 | tags1
+ |
+ ˇ
+(enable blue with proper version & tags)
+ blue | image | version2 | count1 | tags1
+green | image | version2 | count1 | tags1
+ |
+ ˇ
+(disable green by using tags)
+ blue | image | version2 | count1 | tags1
+green | image | version2 | count1 | tags2
+ |
+ ˇ
+(remove green by reducing count to 0)
+ blue | image | version2 | count1 | tags1
+green | image | version2 |      0 | tags2

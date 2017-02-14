@@ -9,3 +9,6 @@ consul_bind_address: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['a
 consul_node_name: "{{ ansible_hostname }}"
 
 nomad_log_level: DEBUG
+
+nomad_version: 0.5.4
+nomad_sha256sum: ed9eb471b9f5bab729cfa402db5aa56e1d935c328ac48327267e0ea53568d5c2

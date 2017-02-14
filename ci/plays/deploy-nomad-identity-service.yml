@@ -3,5 +3,33 @@
   remote_user: root
   gather_facts: true
   sudo: true
+  vars:
+    version_old: latest
+    version_new: latest
+    count_active: 1
+    tags_active: [ "service", "identity", "active" ]
+    tags_inactive: [ "service", "identity" ]
   roles:
-  - deploy-nomad-identity-service
+  # TODO Assumes service is already running (need to ensure this case works as well!)
+
+  # Route to new version as well
+  - role: blue-green-deploy
+    count_blue: "{{ count_active }}"
+    count_green: " {{ count_active }}"
+    tags_green: " {{ tags_active }}"
+  # Wait a bit
+  - role: wait
+    duration: 10s
+  # TODO Maybe run some tests
+  # Update service tags
+  - role: blue-green-deploy
+    count_blue: "{{ count_active }}"
+    count_green: " {{ count_active }}"
+    tags_blue: " {{ tags_inactive }}"
+  # Finally mark the old containers as inactive (hence, traffic will no longer be routed to them)
+  - role: blue-green-deploy
+    count_blue: 0
+    count_green: " {{ count_active }}"
+  # Need to mark the new containers as blue
+  - role: blue-green-deploy
+    tags_green: " {{ tags_active }}"

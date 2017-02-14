@@ -1,9 +1,13 @@
 {% for service_name, cfg in services.iteritems() %}
   upstream {{ service_name }} {
 
-    {{ '{{' }} range service "{{ cfg.service_consul_name }}" {{ '}}' }}
-      server {{ '{{' }} .Address {{ '}}' }}:{{ '{{' }} .Port {{ '}}' }};
-    {{ '{{' }} end {{ '}}' }}
+    {% for consul_name in cfg.service_consul_names %}
+      {{ '{{' }} range service "{{ consul_name }}" {{ '}}' }}
+      {{ '{{' }}  if .Tags | contains "active" {{ '}}' }}
+        server {{ '{{' }} .Address {{ '}}' }}:{{ '{{' }} .Port {{ '}}' }};
+      {{ '{{' }} end {{ '}}' }}
+      {{ '{{' }} end {{ '}}' }}
+    {% endfor %}
 
   }
 {% endfor %}

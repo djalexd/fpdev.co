@@ -3,4 +3,6 @@
 services:
   identity:
     service_endpoint: /identity
-    service_consul_name: example-cache-identity
+    service_consul_names:
+      - identity-blue-runtime
+      - identity-green-runtime

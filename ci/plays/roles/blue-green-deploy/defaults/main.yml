@@ -1,0 +1,10 @@
+---
+count_active:  1
+version_old: latest
+version_new: latest
+tags_active:
+  - active
+tags_inactive: []
+tags_active_with_version_new:
+  - active
+  - "{{ version_new }}"

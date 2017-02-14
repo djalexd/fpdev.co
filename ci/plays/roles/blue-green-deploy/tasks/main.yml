@@ -1,0 +1,61 @@
+---
+
+- include: blue-green.yml
+  vars:
+    step: "Bring version {{ version_new }} along existing"
+    count_blue:    "{{ count_active }}"
+    version_blue:  "{{ version_old }}"
+    tags_blue:     "{{ tags_active }}"
+    count_green:   "{{ count_active }}"
+    version_green: "{{ version_new }}"
+    tags_green:    "{{ tags_active }}"
+
+- include: blue-green.yml
+  vars:
+    step: "Disable old version by using tags"
+    count_blue:    "{{ count_active }}"
+    version_blue:  "{{ version_old }}"
+    tags_blue:     "{{ tags_inactive }}"
+    count_green:   "{{ count_active }}"
+    version_green: "{{ version_new }}"
+    tags_green:    "{{ tags_active }}"
+
+- include: blue-green.yml
+  vars:
+    step: "Remove old version {{ version_old }} by reducing count to 0"
+    count_blue:    0
+    version_blue:  "{{ version_old }}"
+    tags_blue:     "{{ tags_inactive }}"
+    count_green:   "{{ count_active }}"
+    version_green: "{{ version_new }}"
+    tags_green:    "{{ tags_active }}"
+
+- include: blue-green.yml
+  vars:
+    step: "enable blue with proper version {{ version_new }} and tags"
+    count_blue:    "{{ count_active }}"
+    version_blue:  "{{ version_new }}"
+    tags_blue:     "{{ tags_active_with_version_new }}"
+    count_green:   "{{ count_active }}"
+    version_green: "{{ version_new }}"
+    tags_green:    "{{ tags_active }}"
+
+- include: blue-green.yml
+  vars:
+    step: "disable green by using tags"
+    count_blue:    "{{ count_active }}"
+    version_blue:  "{{ version_new }}"
+    tags_blue:     "{{ tags_active_with_version_new }}"
+    count_green:   "{{ count_active }}"
+    version_green: "{{ version_new }}"
+    tags_green:    "{{ tags_inactive }}"
+
+- include: blue-green.yml
+  vars:
+    step: "remove green by reducing count to 0"
+    count_blue:    "{{ count_active }}"
+    version_blue:  "{{ version_new }}"
+    tags_blue:     "{{ tags_active_with_version_new }}"
+    count_green:   0
+    version_green: "{{ version_new }}"
+    tags_green:    "{{ tags_inactive }}"

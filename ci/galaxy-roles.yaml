@@ -8,5 +8,5 @@
 
 - src: geerlingguy.nginx
 
-- src: mtchavez.consul-template
+#- src: mtchavez.consul-template
 - src: wunzeco.consul-template

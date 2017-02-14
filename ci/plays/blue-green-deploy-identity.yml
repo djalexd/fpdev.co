@@ -1,0 +1,13 @@
+---
+- hosts: nomad-servers
+  remote_user: root
+  gather_facts: true
+  sudo: true
+  vars:
+    version_old: latest
+    version_new: latest
+    count_active: 1
+    job: 'identity'
+    image_name: 'djalexd/identity'
+  roles:
+  - role: blue-green-deploy
