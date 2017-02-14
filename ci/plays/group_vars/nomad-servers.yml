@@ -1,6 +1,6 @@
 nomad_server: true
 nomad_client: false
 nomad_name: "{{ inventory_hostname }}"
-nomad_server_bootstrap_expect: 1
+nomad_server_bootstrap_expect: "{{ num_nomad_servers }}"
 nomad_bind_addr: "{{ default_ipv4 }}"
 nomad_ports_http: 4646
