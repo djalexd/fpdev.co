@@ -5,3 +5,8 @@
 
 - src: https://github.com/djalexd/ansible-nomad.git
   name: kbrebanov.nomad
+
+- src: geerlingguy.nginx
+
+- src: mtchavez.consul-template
+- src: wunzeco.consul-template

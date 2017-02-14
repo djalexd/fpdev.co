@@ -1,0 +1,26 @@
+{% for service_name, cfg in services.iteritems() %}
+  upstream {{ service_name }} {
+
+    {{ '{{' }} range service "{{ cfg.service_consul_name }}" {{ '}}' }}
+      server {{ '{{' }} .Address {{ '}}' }}:{{ '{{' }} .Port {{ '}}' }};
+    {{ '{{' }} end {{ '}}' }}
+
+  }
+{% endfor %}
+
+server {
+  server_name {{ server_name | default(inventory_hostname) }};
+
+  listen *:{{ server_port | default(8000) }};
+  include rules/gzip.conf;
+
+  {% for service_name, cfg in services.iteritems() %}
+    location {{ cfg.service_endpoint }}/ {
+      proxy_pass http://{{ service_name }}/;
+      proxy_set_header Host $host;
+    }
+  {% endfor %}
+
+  error_log /var/log/nginx/error.log;
+  access_log /var/log/nginx/access.log;
+}

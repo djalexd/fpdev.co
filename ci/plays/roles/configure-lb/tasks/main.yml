@@ -1,0 +1,10 @@
+---
+- name: create directory
+  file:
+    path: /usr/local/etc/consul-templates
+    state: directory
+- name: copy lb upstreams
+  template:
+    src: upstream.tmpl.j2
+    dest: /usr/local/etc/consul-templates/upstreams.tmpl
+  tags: always

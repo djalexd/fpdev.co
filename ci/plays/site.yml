@@ -67,3 +67,17 @@
     nomad_bind_addr: "{{ hostvars[inventory_hostname]['ansible_eth1']['ipv4']['address'] }}"
     nomad_consul_enable: true
     nomad_consul_address: "{{ consul_bind_address }}"
+
+- hosts: lbs
+  remote_user: root
+  sudo: true
+  vars:
+    server_name: "{{ inventory_hostname }}"
+  roles:
+  - geerlingguy.nginx
+  - configure-lb
+  - role: wunzeco.consul-template
+    consul_template_template:
+      source: "/usr/local/etc/consul-templates/upstreams.tmpl"
+      destination: "/etc/nginx/sites-enabled/upstreams"
+      command: "service nginx reload"

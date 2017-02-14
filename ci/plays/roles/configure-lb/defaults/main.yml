@@ -1,0 +1,6 @@
+---
+# All services need to be configured here, for the moment.
+services:
+  identity:
+    service_endpoint: /identity
+    service_consul_name: example-cache-identity

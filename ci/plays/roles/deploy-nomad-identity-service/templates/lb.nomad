@@ -1,4 +1,4 @@
-job "example" {
+job "lb" {
 	datacenters = ["dc1"]
 	priority = 50
 
@@ -17,7 +17,6 @@ job "example" {
 			delay = "25s"
 			mode = "delay"
 		}
-
 		# Define a task to run
 		task "identity" {
 			driver = "docker"
